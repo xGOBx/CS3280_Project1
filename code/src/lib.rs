@@ -1,18 +1,35 @@
 use std::fs::{self, File};
 use std::io::{self, BufRead, Write};
-use std::path::Path;
+use std::path::{Path, PathBuf};
+use std::sync::mpsc::Sender;
+use log::{error, info};
 
-pub fn process_input_file(folders: &[String]) -> Result<String, io::Error> {
+pub fn process_input_file(folders: &[String], tx: Sender<String>) -> Result<String, io::Error> {
+    let log_file = "log.txt";
+    let mut log = File::options()
+        .create(true)
+        .append(true)
+        .open(log_file)?;
+
     for folder in folders {
-        let file_path = format!("{}/branch_weekly_sales.txt", folder);
-        
-        println!("Looking for file at: {}", file_path);
-        
-        if !Path::new(&file_path).exists() {
-            return Err(io::Error::new(io::ErrorKind::NotFound, format!("Input file not found at path: {}", file_path)));
+        let mut file_path = PathBuf::from("data"); 
+        file_path.push(folder); 
+        file_path.push("branch_weekly_sales.txt"); 
+
+        println!("Looking for file at: {:?}", file_path);
+
+        if !file_path.exists() {
+            let err_msg = format!("Input file not found in {}", file_path.display());
+            error!("{}", err_msg);
+            writeln!(log, "{}", err_msg)?;
+            tx.send(format!("Error: Input file not found in {}", folder)).unwrap_or_default();
+            continue; 
         }
 
-        let file = File::open(&file_path)?;
+        info!("Processing folder: {}", folder);
+        writeln!(log, "Processing folder: {}", folder)?;
+
+        let file = File::open(&file_path)?; 
         let reader = io::BufReader::new(file);
 
         let mut total_sales = 0;
@@ -23,26 +40,15 @@ pub fn process_input_file(folders: &[String]) -> Result<String, io::Error> {
             let line = line?;
             let parts: Vec<&str> = line.split(", ").collect();
             if parts.len() == 4 {
-                branch_code = parts[0].to_string(); 
+                branch_code = parts[0].to_string();
                 let quantity_sold: i32 = parts[2].parse().unwrap_or(0); 
                 total_sales += quantity_sold;
             }
         }
 
-        let summary_line = format!("{}, {}, {}", branch_code, product_code, total_sales);
-        write_to_summary_file(&summary_line)?;
+        let summary = format!("{}, {}, {}", branch_code, product_code, total_sales);
+        tx.send(summary).expect("Failed to send data to main thread");
     }
 
     Ok("OK".to_string())
-}
-
-pub fn write_to_summary_file(data: &str) -> Result<(), io::Error> {
-    let summary_file_path = "data/weekly_summary/weekly_sales_summary.txt";
-    let mut file = File::options()
-        .create(true)
-        .append(true)
-        .open(summary_file_path)?;
-
-    writeln!(file, "{}", data)?;
-    Ok(())
 }
