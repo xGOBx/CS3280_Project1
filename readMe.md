@@ -32,3 +32,6 @@
 
 ## Performance Comparison
 
+There was a change between Version 1 and Version 2, with Version 2 being 5.8658ms faster than Version 1.
+
+Version 1 took 21.0109 ms, while Version 2 took 15.1451 ms.
