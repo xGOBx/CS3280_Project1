@@ -1,8 +1,8 @@
-use std::fs;
-use std::fs::File; 
-use std::io::Write; 
-use rand::Rng; 
-use chrono::NaiveDate; 
+use std::fs::{self, File};
+use std::io::{self, BufRead, Write};
+use std::path::Path;
+use rand::Rng;
+use chrono::NaiveDate;
 
 /**
  * Generates weekly sales data for a list of branch codes.
@@ -45,4 +45,39 @@ pub fn generate_branch_data() -> Vec<&'static str> {
     println!("Branch folders and sales data generated successfully.");
     
     return branch_codes;
+}
+
+/**
+ * Loads existing sales data for branches that have generated files.
+ *
+ * This function reads existing `branch_weekly_sales.txt` files from the "data" directory
+ * and returns a vector of strings containing the sales data.
+ *
+ * Returns:
+ * - A vector of strings, where each string is the contents of a sales file for a branch.
+ *
+ * Errors:
+ * - If a file cannot be read, an error message is printed, and that file's data will be skipped.
+ */
+pub fn load_existing_branch_data() -> Vec<String> {
+    let branch_codes = vec![
+        "ALBNM", "TXHOU", "NYNYC", "LABUR", "CHCHI", "MIAMI", "DENCO", "PHOAZ", "SATX", "LASNV",
+        "SEAWA", "DETPR", "ATLGA", "BOSMA", "BALMD", "MINMN", "CHARNC", "ININD", "OKLOK", "LOUKY",
+        "PORTOR", "TUSAL", "MIPER", "NORVA", "ORLFL", "TBFLA", "AKRCO", "RICHVA", "SPOWA", "OMAHA",
+        "FTWTC", "NASTN", "GRMI", "PITPA", "COLCO", "ATLOK", "FRSCA", "JACFL", "SLCUT", "BUFNY"
+    ];
+
+    let mut existing_data = Vec::new();
+
+    for branch_code in branch_codes.iter() {
+        let file_path = format!("data/{}/branch_weekly_sales.txt", branch_code);
+        if Path::new(&file_path).exists() {
+            match fs::read_to_string(&file_path) {
+                Ok(data) => existing_data.push(data),
+                Err(e) => eprintln!("Failed to read sales data for {}: {}", branch_code, e),
+            }
+        }
+    }
+
+    existing_data
 }

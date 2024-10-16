@@ -18,15 +18,14 @@ pub fn process_input_file(folders: &[String]) -> Result<String, io::Error> {
     for folder in folders {
         let file_path = format!("{}/branch_weekly_sales.txt", folder);
         
-        println!("Looking for file at: {}", file_path); 
+        //println!("Looking for file at: {}", file_path); 
         
-        // Check if the file exists. If not, return a NotFound error.
         if !Path::new(&file_path).exists() {
             return Err(io::Error::new(io::ErrorKind::NotFound, format!("Input file not found at path: {}", file_path)));
         }
 
         let file = File::open(&file_path)?; 
-        let reader = io::BufReader::new(file); // Wrap the file in a buffered reader for efficient reading.
+        let reader = io::BufReader::new(file); 
 
         let mut total_sales = 0; 
         let mut branch_code = String::new(); 
