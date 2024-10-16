@@ -32,4 +32,3 @@
 
 ## Performance Comparison
 
-There was no significant performance difference between Version 1 and Version 2 in my testing.
