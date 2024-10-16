@@ -3,8 +3,10 @@
 ## How to Run the Programs
 
 1. **Set Up**:
-   - Import the project files into Visual Studio Code (VS Code).
-   - Make sure you have the **Rust extension** installed in VS Code.
+   - Make sure Rust is installed on your machine. If not, install it from [rust-lang.org](https://www.rust-lang.org/tools/install).
+   - Open **File Explorer** on your Windows machine.
+   - Navigate to the project directory: `\code\src`.
+   - In the **File Explorer** search bar, type `cmd` and press **Enter**. This will open a command prompt at the current directory location.
 
 2. **Switching Between Versions**:
    - To see the available versions, run:
@@ -15,19 +17,18 @@
      ```bash
      git checkout <branch-name>
      ```
-   - VS Code should update automatically. If it doesn't, close and reopen the editor.
 
-3. **Dependencies**:
-   - Open the terminal in VS Code and run:
+3. **Building the Program**:
+   - In the command prompt, run:
      ```bash
      cargo build
      ```
 
-4. **Running the Programs**:
+4. **Running the Program**:
+   - After building, run the program by typing:
      ```bash
-     cargo run 
+     cargo run
      ```
-
 
 ## Performance Comparison
 

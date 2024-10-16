@@ -28,7 +28,7 @@ pub fn generate_branch_data() -> Vec<&'static str> {
     ];
 
     let product_code = "PROD001"; // Product code for the item being sold.
-    let start_date = NaiveDate::from_ymd(2023, 1, 1); 
+    let start_date = NaiveDate::from_ymd_opt(2023, 1, 1).expect("Invalid date");
 
     // Iterate over each branch and generate sales data.
     for branch_code in branch_codes.iter() {

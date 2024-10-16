@@ -4,7 +4,6 @@ use std::thread;
 use std::sync::mpsc; 
 use std::time::Instant; 
 use std::io::Write;
-mod lib; 
 mod generate_data;
 
 /**
@@ -23,9 +22,9 @@ mod generate_data;
 fn write_to_summary_file(data: &str) -> Result<(), std::io::Error> {
     let summary_file_path = "data/weekly_summary/weekly_sales_summary.txt";
     let mut file = std::fs::File::options()
-        .create(true) // Create the file if it doesn't exist.
-        .append(true) // Append to the file if it exists.
-        .open(summary_file_path)?; // Open the file for writing.
+        .create(true)
+        .append(true)
+        .open(summary_file_path)?; 
 
     writeln!(file, "{}", data)?;
     Ok(())
@@ -80,8 +79,8 @@ fn main() {
         let tx = tx.clone(); 
 
         let handle = thread::spawn(move || {
-            // Process the input files for the group of branches and send the results via the channel.
-            if let Err(e) = lib::process_input_file(&group, tx) {
+            // Use the crate name to access the function
+            if let Err(e) = cs3280_project1::process_input_file(&group, tx) {
                 eprintln!("Thread failed to process input: {:?}", e); 
             }
         });
