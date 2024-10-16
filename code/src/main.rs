@@ -1,8 +1,7 @@
 use std::fs; 
 use std::path::Path; 
 use std::time::Instant; 
-mod lib; 
-mod generate_data; 
+mod generate_data;
 
 /**
  * Main function to generate branch sales data and process it.
@@ -40,7 +39,7 @@ fn main() {
         .collect::<Vec<String>>();
     
     // Process the input files for all branches.
-    let result = lib::process_input_file(&branch_folders);
+    let result = cs3280_project1::process_input_file(&branch_folders); 
 
     match result {
         Ok(msg) => println!("{}", msg),

@@ -1,4 +1,5 @@
-use std::fs::{self, File}; 
+use std::fs;
+use std::fs::File; 
 use std::io::Write; 
 use rand::Rng; 
 use chrono::NaiveDate; 
@@ -23,7 +24,7 @@ pub fn generate_branch_data() -> Vec<&'static str> {
     ];
 
     let product_code = "PROD001"; 
-    let start_date = NaiveDate::from_ymd(2023, 1, 1); 
+    let start_date = NaiveDate::from_ymd_opt(2023, 1, 1).expect("Invalid date");
 
     for branch_code in branch_codes.iter() {
         let branch_folder = format!("data/{}", branch_code);
